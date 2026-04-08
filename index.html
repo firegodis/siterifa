@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <base target="_self">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rifa - Números 00 a 99</title>
+    <meta name="description" content="Site para gerenciar números de uma rifa de 00 a 99">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script>
+        
+        const firebaseConfig = {
+        apiKey: "AIzaSyCPNKFapbR8KecZRbfXeG-lWU7MZl9ZPe0",
+        authDomain: "rifa-wwl.firebaseapp.com",
+        projectId: "rifa-wwl",
+        storageBucket: "rifa-wwl.firebasestorage.app",
+        messagingSenderId: "311844587338",
+        appId: "1:311844587338:web:81bb4444c41f2064a7a3b3",
+        measurementId: "G-73VMEZM91V"
+        };
+       
+
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3b82f6",
+                        secondary: "#1e40af",
+                        success: "#10b981",
+                        danger: "#ef4444"
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="min-h-screen bg-gray-50">
+    <header class="bg-white shadow-md">
+        
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h1 class="text-3xl font-bold text-gray-800">Rifa Online</h1>
+                    <p class="text-gray-600 mt-1">Gerencie números de 00 a 99</p>
+                </div>
+                
+            </div>
+        </div>
+    </header>
+
+    <!-- CARROSSEL -->
+    <div class="relative w-full overflow-hidden bg-black">
+
+        <div id="carousel" class="flex transition-transform duration-700">
+
+            <!-- Slide 1 -->
+            <div class="min-w-full relative">
+                <img src="img/bike1.jpeg" class="w-full h-[700px] object-cover opacity-70">
+                <div class="absolute inset-0 flex flex-col justify-center items-center text-center text-white">
+                    <h2 class="text-3xl font-bold">Bicicleta Ergométrica seminova</h2>
+                    <p class="text-3xl font-bold">William de Oliveira Pessoa</p>
+                    <p class="text-3xl font-bold">Chave Pix: (61) 98338-8144</p>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="min-w-full relative">
+                <img src="img/bike2.jpeg" class="w-full h-[700px] object-cover opacity-70">
+                <div class="absolute inset-0 flex flex-col justify-center items-center text-center text-white">
+                    <h2 class="text-3xl font-bold">Participe da Rifa</h2>
+                    <p class="text-3xl font-bold">Escolha seu número e concorra!</p>
+                    <p class="text-3xl font-bold">Entre com contato com Wania! (61) 9227-6599</p>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="min-w-full relative">
+                <img src="img/bike3.jpeg" class="w-full h-[700px] object-cover opacity-70">
+                <div class="absolute inset-0 flex flex-col justify-center items-center text-center text-white">
+                    <h2 class="text-3xl font-bold">Boa sorte 🍀</h2>
+                    <p class="text-3xl font-bold">Resultado em breve</p>
+                </div>
+            </div>
+
+        
+
+        </div>
+
+        <!-- Botões -->
+        <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 px-3 py-2 rounded">❮</button>
+        <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 px-3 py-2 rounded">❯</button>
+
+    </div>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Grade de números -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Números Disponíveis</h2>
+                        <div class="flex space-x-2">
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-700">Status dos números:</span>
+                            <div class="flex space-x-4">
+                                <div class="flex items-center">
+                                    <div class="w-4 h-4 bg-green-200 rounded mr-2"></div>
+                                    <span class="text-sm">Disponível</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-4 h-4 bg-red-500 rounded mr-2"></div>
+                                    <span class="text-sm">Indisponível</span>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="numbers-grid" class="grid grid-cols-5 sm:grid-cols-10 gap-3"></div>
+                </div>
+            </div>
+            
+            <!-- Painel de controle -->
+            
+            </div>
+        </div>
+        
+        <!-- Tabela de registros -->
+        
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-12">
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-xl font-bold">Rifa Online</h3>
+                    <p class="text-gray-400 mt-1">Sistema de gerenciamento de rifas</p>
+                </div>
+                <div class="text-center md:text-right">
+                    <p class="text-gray-400">Desenvolvido por Luiz para facilitar o controle de números</p>
+                    <p class="text-gray-400 text-sm mt-1">Números de 00 a 99</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+                <p>© 2026 LuizH. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de confirmação -->
+    <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full mx-4">
+            <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                    <i class="fas fa-check text-green-600 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2" id="modal-title">Confirmação</h3>
+                <p class="text-gray-500 mb-6" id="modal-message">Tem certeza que deseja prosseguir?</p>
+                <div class="flex space-x-4">
+                    <button id="modal-cancel" class="flex-1 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">Cancelar</button>
+                    <button id="modal-confirm" class="flex-1 py-2 px-4 bg-primary text-white rounded-lg hover:bg-secondary transition">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== DATA LAYER ==========
+        // Array de números da rifa (00 a 99)
+        const raffleNumbers = Array.from({ length: 100 }, (_, i) => {
+            const number = i.toString().padStart(2, '0');
+            return {
+                id: i,
+                number: number,
+                selected: false,
+                paid: false,
+                buyerName: "",
+                buyerPhone: "",
+                buyerEmail: "",
+                purchaseDate: null
+            };
+        });
+
+        // Registros salvos (simulando banco de dados)
+        let savedRecords = JSON.parse(localStorage.getItem('raffleRecords')) || [];
+
+        // ========== REUSABLE RENDER FUNCTIONS ==========
+        // Função para renderizar a grade de números
+        function renderNumbersGrid(numbers) {
+            return numbers.map(num => {
+                let bgColor = "bg-green-200";
+                let textColor = "text-green-800";
+                let status = "Disponível";
+
+                if (num.paid) {
+                    bgColor = "bg-red-500";
+                    textColor = "text-white";
+                    status = "Indisponível";
+                }
+
+                return `
+                    <div>
+                        <div class="w-full h-16 ${bgColor} ${textColor} border rounded-lg flex flex-col items-center justify-center">
+                            <span class="text-xl font-bold">${num.number}</span>
+                            <span class="text-xs mt-1">${status}</span>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        // Função para renderizar a lista de números selecionados
+        function renderSelectedNumbersList(numbers) {
+            const selectedNumbers = numbers.filter(num => num.selected);
+            
+            if (selectedNumbers.length === 0) {
+                return '<p class="text-gray-500 text-center py-4">Nenhum número selecionado</p>';
+            }
+            
+            return selectedNumbers.map(num => {
+                return `
+                    <div class="flex justify-between items-center bg-white p-2 rounded mb-2 border border-gray-200">
+                        <div class="flex items-center">
+                            <span class="font-bold text-primary mr-2">${num.number}</span>
+                            <span class="text-sm text-gray-600">${num.paid ? "(Pago)" : "(Pendente)"}</span>
+                        </div>
+                        <button class="text-danger hover:text-red-700 remove-number" data-id="${num.id}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        // Função para renderizar a tabela de registros
+        function renderRecordsTable(records) {
+            if (records.length === 0) {
+                document.getElementById('no-records-message').classList.remove('hidden');
+                return '';
+            }
+            
+            document.getElementById('no-records-message').classList.add('hidden');
+            
+            return records.map(record => {
+                const date = record.purchaseDate ? new Date(record.purchaseDate).toLocaleDateString('pt-BR') : 'N/A';
+                const statusColor = record.paid ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800";
+                const statusText = record.paid ? "Pago" : "Pendente";
+                
+                return `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-bold text-gray-900">${record.number}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColor}">
+                                ${statusText}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${record.buyerName || "N/A"}</div>
+                            <div class="text-sm text-gray-500">${record.buyerEmail || ""}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            ${record.buyerPhone || "N/A"}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            ${date}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button class="text-primary hover:text-secondary mr-3 edit-record" data-id="${record.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="text-danger hover:text-red-700 delete-record" data-id="${record.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        // Função para renderizar os contadores
+        function renderCounters(numbers) {
+            const selectedCount = numbers.filter(num => num.selected).length;
+            const paidCount = numbers.filter(num => num.paid).length;
+            const availableCount = numbers.filter(num => !num.paid).length;
+            
+            
+            
+            
+            return { selectedCount, paidCount, availableCount };
+        }
+        function saveToFirebase(record) {
+            db.collection("rifa").doc(record.number).set(record);
+        }
+
+        // ========== UTILITY FUNCTIONS ==========
+        // Função para salvar dados no localStorage (simulando banco de dados)
+        function saveToLocalStorage() {
+            // 🔥 Continua salvando local (opcional)
+            localStorage.setItem('raffleRecords', JSON.stringify(savedRecords));
+            
+            // 🔥 NOVO: salvar tudo no Firebase
+            savedRecords.forEach(record => {
+                saveToFirebase(record);
+            });
+            
+            // 🔄 Atualizar números com base nos registros
+            raffleNumbers.forEach(num => {
+                const record = savedRecords.find(r => r.number === num.number);
+                if (record) {
+                    num.selected = true;
+                    num.paid = record.paid;
+                    num.buyerName = record.buyerName;
+                    num.buyerPhone = record.buyerPhone;
+                    num.buyerEmail = record.buyerEmail;
+                    num.purchaseDate = record.purchaseDate;
+                } else {
+                    if (!num.selected) {
+                        num.paid = false;
+                        num.buyerName = "";
+                        num.buyerPhone = "";
+                        num.buyerEmail = "";
+                        num.purchaseDate = null;
+                    }
+                }
+            });
+        }
+
+        function loadFromDatabase() {
+            db.collection("rifa").onSnapshot(snapshot => {
+                // 🔥 LIMPAR tudo antes (importante!)
+                raffleNumbers.forEach(num => {
+                    num.selected = false;
+                    num.paid = false;
+                });
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+
+                    const numIndex = raffleNumbers.findIndex(n => n.number === data.number);
+                    if (numIndex !== -1) {
+                        raffleNumbers[numIndex] = {
+                            ...raffleNumbers[numIndex],
+                            ...data,
+                            selected: false
+                        };
+                    }
+                });
+
+                initializePage();
+            });
+        }
+
+        // Função para mostrar modal de confirmação
+        function showConfirmationModal(title, message, confirmCallback) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            document.getElementById('confirmation-modal').classList.remove('hidden');
+            
+            const confirmBtn = document.getElementById('modal-confirm');
+            const cancelBtn = document.getElementById('modal-cancel');
+            
+            // Remover listeners anteriores
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+            
+            // Adicionar novos listeners
+            document.getElementById('modal-confirm').onclick = function() {
+                document.getElementById('confirmation-modal').classList.add('hidden');
+                confirmCallback();
+            };
+            
+            document.getElementById('modal-cancel').onclick = function() {
+                document.getElementById('confirmation-modal').classList.add('hidden');
+            };
+        }
+
+        // ========== INITIALIZATION ==========
+        // Inicializar a página
+        function initializePage() {
+            // Renderizar grade de números
+            document.getElementById('numbers-grid').innerHTML = renderNumbersGrid(raffleNumbers);
+            
+            // Renderizar contadores
+            renderCounters(raffleNumbers);
+            
+            // Renderizar tabela de registros
+            document.getElementById('records-table').innerHTML = renderRecordsTable(savedRecords);
+            
+            // Atualizar lista de números selecionados
+            updateSelectedNumbersList();
+        }
+
+        // Atualizar lista de números selecionados
+        function updateSelectedNumbersList() {
+            document.getElementById('selected-numbers-list').innerHTML = renderSelectedNumbersList(raffleNumbers);
+            renderCounters(raffleNumbers);
+        }
+
+        // ========== EVENT HANDLERS ==========
+        // Delegated event handling para números da grade
+       
+
+        // Evento para salvar seleção
+        
+
+        // Evento para marcar como pago
+        
+
+        // Evento para exportar dados
+        
+
+        // ========== INITIALIZE PAGE ==========
+        // Inicializar a página quando carregada
+        document.addEventListener('DOMContentLoaded', function() {
+         
+            loadFromDatabase(); // 🔥 AQUI
+        });
+
+        let currentSlide = 0;
+
+        function updateCarousel() {
+            const carousel = document.getElementById("carousel");
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        function nextSlide() {
+            const totalSlides = document.querySelectorAll("#carousel > div").length;
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            const totalSlides = document.querySelectorAll("#carousel > div").length;
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        // Auto-play (opcional 🔥)
+        setInterval(nextSlide, 4000);
+    </script>
+</body>
+</html>
