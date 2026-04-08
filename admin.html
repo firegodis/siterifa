@@ -451,15 +451,19 @@
 
         function loadFromDatabase() {
             db.collection("rifa").onSnapshot(snapshot => {
-                // 🔥 LIMPAR tudo antes (importante!)
+
+                // 🔥 Limpar tudo
                 raffleNumbers.forEach(num => {
                     num.selected = false;
                     num.paid = false;
                 });
 
+                savedRecords = []; // 🔥 LIMPA registros também
+
                 snapshot.forEach(doc => {
                     const data = doc.data();
 
+                    // Atualiza números
                     const numIndex = raffleNumbers.findIndex(n => n.number === data.number);
                     if (numIndex !== -1) {
                         raffleNumbers[numIndex] = {
@@ -468,6 +472,9 @@
                             selected: false
                         };
                     }
+
+                    // 🔥 ADICIONA nos registros
+                    savedRecords.push(data);
                 });
 
                 initializePage();
